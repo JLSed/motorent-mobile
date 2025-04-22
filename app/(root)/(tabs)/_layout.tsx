@@ -21,6 +21,7 @@ import {
 import HomeScreen from './index'; // Assuming this is your home screen
 import SearchScreen from './SearchScreen'; // Assuming this is your search screen
 import { signOutUser } from '@/lib/supabase';
+import UnitDetails from './UnitDetails'; // Import the UnitDetails screen
 
 const Tab = createBottomTabNavigator();
 
@@ -46,9 +47,7 @@ export default function TabsLayout() {
           headerStyle: { backgroundColor: '#12191D' }, // Header background color
           headerTitleAlign: 'center', // Center the title
           headerTitle: () => (
-            <Text
-              style={{ color: '#FFFFFF', fontSize: 18, fontWeight: 'bold' }}
-            >
+            <Text className="font-monstserrat-bold text-secondary">
               MOTORENT
             </Text>
           ), // Custom title
@@ -78,6 +77,13 @@ export default function TabsLayout() {
           }}
         />
         <Tab.Screen
+          name="UnitDetails"
+          component={UnitDetails} // Add UnitDetails screen
+          options={{
+            tabBarButton: () => null, // Hide this screen from the tab bar
+          }}
+        />
+        <Tab.Screen
           name="Search"
           component={SearchScreen}
           options={{
@@ -95,7 +101,7 @@ export default function TabsLayout() {
         animationType="slide"
         onRequestClose={() => setIsModalVisible(false)}
       >
-        <TouchableOpacity className="bg-black/20 flex-1 justify-end items-center">
+        <View className="bg-black/20 flex-1 justify-end items-center">
           <View className="w-full bg-white rounded-xl rounded-br-none rounded-bl-none p-4 items-center">
             <Text className="font-poppins-bold text-2xl mb-10 text-gray-300 w-full text-center">
               User Menu
@@ -124,7 +130,7 @@ export default function TabsLayout() {
               </Text>
             </TouchableOpacity>
           </View>
-        </TouchableOpacity>
+        </View>
       </Modal>
     </AuthProvider>
   );

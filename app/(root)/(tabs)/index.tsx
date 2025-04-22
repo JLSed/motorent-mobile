@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
-import AvailableUnits from './AvailableUnits'; // Import the UnitsList component
-
+import AvailableUnits from './components/AvailableUnits';
+import RecentlyUnits from './components/RecentlyUnits';
 export default function Index() {
   const [units, setUnits] = useState<any[]>([]); // State to store units
   const [loading, setLoading] = useState(true); // State for loading
@@ -56,21 +56,50 @@ export default function Index() {
     return diffInDays <= 7; // Consider "new" if added within the last 7 days
   };
 
+  // Filter available units
+  const availableUnits = units.filter((unit) => unit.status === 'AVAILABLE');
+
+  // Filter recently added units
+  const recentlyAddedUnits = units.filter((unit) => isNewUnit(unit.created_at));
+
   return (
-    <SafeAreaView className="bg-secondary h-full pb-12">
+    <SafeAreaView className="bg-secondary h-full">
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <View className="mt-2 px-2">
+        <View className="mt-2 px-1">
           <Text className="font-poppins-bold text-3xl text-accent-gray">
             Available Units
           </Text>
 
           {/* Units List */}
           <AvailableUnits
-            units={units}
+            units={availableUnits} // Pass only available units
+            loading={loading}
+            isNewUnit={isNewUnit}
+          />
+        </View>
+        <View className="mt-12 px-1">
+          <Text className="font-poppins-bold text-3xl text-accent-gray">
+            Recently Added
+          </Text>
+
+          {/* Recently Added Units List */}
+          <RecentlyUnits
+            units={recentlyAddedUnits} // Pass only recently added units
+            loading={loading}
+          />
+        </View>
+        <View className="mt-2 px-2">
+          <Text className="font-poppins-bold text-4xl text-center text-accent-gray">
+            All Units
+          </Text>
+
+          {/* Units List */}
+          <AvailableUnits
+            units={units} // Pass all units
             loading={loading}
             isNewUnit={isNewUnit}
           />

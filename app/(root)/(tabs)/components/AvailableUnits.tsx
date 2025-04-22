@@ -1,4 +1,4 @@
-import { parse } from '@babel/core';
+import React from 'react';
 import {
   BicepsFlexed,
   Bolt,
@@ -6,20 +6,9 @@ import {
   Turtle,
   Zap,
 } from 'lucide-react-native';
-import React from 'react';
 import { FlatList, Text, View, Image, TouchableOpacity } from 'react-native';
-
-interface Unit {
-  unit_id: string;
-  name: string;
-  hourly_rate: string;
-  transmission: string;
-  horsepower: string;
-  engine_displacement: string;
-  purchased_date: string;
-  created_at: string;
-  image_url: string;
-}
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList, Unit } from '@/types/type'; // Import types
 
 interface UnitsListProps {
   units: Unit[];
@@ -28,6 +17,8 @@ interface UnitsListProps {
 }
 
 const UnitsList: React.FC<UnitsListProps> = ({ units, loading, isNewUnit }) => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   return (
     <>
       {loading ? (
@@ -38,14 +29,14 @@ const UnitsList: React.FC<UnitsListProps> = ({ units, loading, isNewUnit }) => {
         <FlatList
           data={units}
           keyExtractor={(item) => item.unit_id}
-          horizontal // Enable horizontal scrolling
-          showsHorizontalScrollIndicator={false} // Hide horizontal scroll indicator
-          contentContainerStyle={{ paddingHorizontal: 16 }} // Add padding to the list
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 16 }}
           renderItem={({ item }) => (
             <View className="w-60 mr-4 bg-black-100 rounded-lg border-2 border-gray-200 p-3 relative">
               {/* "New Unit" Label */}
               {isNewUnit(item.created_at) && (
-                <Text className="absolute top-2 font-monstserrat-bold right-2 text-xs bg-orange-400 text-white rounded-full px-2 py-1">
+                <Text className="absolute top-2 font-monstserrat-bold right-2 text-xs bg-orange-400 text-white rounded-full px-2 py-1 z-10">
                   New Unit
                 </Text>
               )}
@@ -76,6 +67,7 @@ const UnitsList: React.FC<UnitsListProps> = ({ units, loading, isNewUnit }) => {
                 </View>
                 <View className="flex-col items-center">
                   <Turtle color={'black'} />
+
                   <Text className="font-poppins-bold text-sm color-black">
                     {item.horsepower} HP
                   </Text>
@@ -90,7 +82,12 @@ const UnitsList: React.FC<UnitsListProps> = ({ units, loading, isNewUnit }) => {
                 </Text>
               </View>
               {/* Book Button */}
-              <TouchableOpacity className="bg-blue-500 mt-2 bg-blue px-2 py-2 rounded-md">
+              <TouchableOpacity
+                className="bg-blue-500 mt-2 bg-blue px-2 py-2 rounded-md"
+                onPress={() =>
+                  navigation.navigate('UnitDetails', { unit: item })
+                }
+              >
                 <Text className="text-center text-secondary font-poppins-bold text-lg">
                   Book
                 </Text>
