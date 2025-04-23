@@ -6,7 +6,14 @@ import {
   Zap,
 } from 'lucide-react-native';
 import React from 'react';
-import { FlatList, Text, View, Image, TouchableOpacity } from 'react-native';
+import {
+  FlatList,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import { RootStackParamList, Unit } from '@/types/type'; // Import types
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 
@@ -17,6 +24,14 @@ interface UnitsListProps {
 
 const UnitsList: React.FC<UnitsListProps> = ({ units, loading }) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const handleUnavailableClick = (status: string) => {
+    const message =
+      status === 'OCCUPIED'
+        ? 'This unit is currently occupied and not available.'
+        : 'This unit is under maintenance and not available.';
+    Alert.alert('Unit Unavailable', message);
+  };
+
   return (
     <>
       {loading ? (
@@ -35,6 +50,17 @@ const UnitsList: React.FC<UnitsListProps> = ({ units, loading }) => {
               <Text className="absolute top-0 font-monstserrat-bold right-2 left-2 text-center text-xs bg-orange-400 text-white rounded-full rounded-tl-none rounded-tr-none px-2 py-1 z-10">
                 New Unit
               </Text>
+              {/* Status Label */}
+              {item.status === 'OCCUPIED' && (
+                <Text className="absolute right-0 top-1/4 z-10 bg-red-700 font-poppins-bold text-2xl text-white rounded-full rounded-r-none px-2 py-1">
+                  Rented
+                </Text>
+              )}
+              {item.status === 'MAINTENANCE' && (
+                <Text className="absolute right-0 top-1/4 z-10 bg-orange-700 font-poppins-bold text-2xl text-white rounded-full rounded-r-none px-2 py-1">
+                  Repairing
+                </Text>
+              )}
               <Text className="absolute right-0 bottom-1/2 z-10 bg-orange-400 font-poppins-bold text-2xl text-white rounded-full rounded-r-none px-2 py-1">
                 {parseInt(item.hourly_rate) * 24} PHP / Day
               </Text>
@@ -74,13 +100,18 @@ const UnitsList: React.FC<UnitsListProps> = ({ units, loading }) => {
               </Text>
               {/* Book Button */}
               <TouchableOpacity
-                className="bg-blue-500 mt-2 bg-blue px-2 py-2 rounded-md"
+                className={`bg-blue-500 mt-2 px-2 py-2 rounded-md ${
+                  item.status !== 'AVAILABLE' ? 'opacity-50' : ''
+                }`}
                 onPress={() =>
-                  navigation.navigate('UnitDetails', { unit: item })
+                  item.status === 'AVAILABLE'
+                    ? navigation.navigate('UnitDetails', { unit: item })
+                    : handleUnavailableClick(item.status)
                 }
+                disabled={item.status !== 'AVAILABLE'}
               >
                 <Text className="text-center text-secondary font-poppins-bold text-lg">
-                  Book
+                  {item.status === 'AVAILABLE' ? 'Book' : 'Unavailable'}
                 </Text>
               </TouchableOpacity>
             </View>

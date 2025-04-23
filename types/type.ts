@@ -8,6 +8,7 @@ export type Unit = {
   purchased_date: string;
   created_at: string;
   image_url: string;
+  status: 'AVAILABLE' | 'OCCUPIED' | 'MAINTENANCE'; // Add status field
 };
 
 export type RootStackParamList = {

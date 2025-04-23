@@ -92,7 +92,7 @@ export default function Index() {
             loading={loading}
           />
         </View>
-        <View className="mt-2 px-2">
+        <View className="mt-16 px-2">
           <Text className="font-poppins-bold text-4xl text-center text-accent-gray">
             All Units
           </Text>
