@@ -59,6 +59,13 @@ export default function UnitDetails({ route, navigation }: any) {
         return;
       }
 
+      const { duration, totalCost } = calculateDurationAndCost();
+
+      if (duration <= 0 || totalCost <= 0) {
+        Alert.alert('Error', 'Invalid dates selected.');
+        return;
+      }
+
       await createRequest(
         user.email || '',
         contactNum,
@@ -67,7 +74,9 @@ export default function UnitDetails({ route, navigation }: any) {
         endDate.toISOString().split('T')[0],
         firstName,
         lastName,
-        paymentMethod
+        paymentMethod,
+        duration, // Pass duration in days
+        totalCost // Pass total cost
       );
 
       Alert.alert('Success', 'Your request has been submitted.');

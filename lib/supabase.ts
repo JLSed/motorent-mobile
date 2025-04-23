@@ -80,7 +80,9 @@ export const createRequest = async (
   end_date: string,
   first_name: string,
   last_name: string,
-  payment_method: string
+  payment_method: string,
+  duration_day: number, // New column for duration in days
+  total_cost: number // New column for total cost
 ) => {
   try {
     const { data, error } = await supabase.from('REQUESTS').insert([
@@ -93,6 +95,8 @@ export const createRequest = async (
         first_name,
         last_name,
         payment_method,
+        duration_day, // Include duration in days
+        total_cost, // Include total cost
       },
     ]);
 
